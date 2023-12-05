@@ -30,7 +30,7 @@ let convertToGame (card: string) =
 
     let out = {
         Theirs = theirs;
-        Mine =ours
+        Mine = ours
     }
     out
 
