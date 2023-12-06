@@ -38,6 +38,9 @@ let calculateScore (card: Card) =
     let winners = (Set.intersect card.Mine card.Theirs |> Seq.length) - 1
     if winners >= 0 then Math.Pow(2, winners) else 0
 
+let calculateNewScore (card: Card) =
+    Set.intersect card.Mine card.Theirs |> Seq.length
+
 let numbers =
     lines
     |> Seq.map stripPrefix
@@ -45,4 +48,26 @@ let numbers =
     |> Seq.map calculateScore
     |> Seq.sum
 
-printfn "%A" numbers
+printfn "Part A: %A" numbers
+
+let rec totalNumberOfCards (acc: seq<int>) =
+    let mutable cards = Seq.toArray acc
+    let mutable countOfCards = acc |> Seq.map (fun _ -> 1) |> Seq.toArray
+
+    for i in 0..cards.Length - 1 do
+        let value = cards[i]
+        for j in 1..value do
+            let v = countOfCards[i+j]
+            countOfCards[i+j] <- v + countOfCards[i]
+
+    countOfCards
+
+let two =
+    lines
+    |> Seq.map stripPrefix
+    |> Seq.map convertToGame
+    |> Seq.map calculateNewScore
+    |> totalNumberOfCards
+    |> Seq.sum
+
+printfn "Part B: %A" two
