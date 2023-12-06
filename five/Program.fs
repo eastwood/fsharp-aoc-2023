@@ -16,7 +16,7 @@ type Mapping = (int64 * int64 * int64)
   
 let createMap (line: string): Mapping =
     let numbers = line.Split(" ")
-    (Int64.Parse(numbers[1]), Int64.Parse(numbers[0]), Int64.Parse(numbers[2]))
+    (Int64.Parse(numbers[0]), Int64.Parse(numbers[1]), Int64.Parse(numbers[2]))
 
 let createMappings (line: string) =
     line.Split("|")[1..]
@@ -62,18 +62,4 @@ let convertSeedToLocation (seed: int64) =
 let one = seeds |> Seq.map convertSeedToLocation |> Seq.min
 printfn "Part A: %A" one
 
-let ranges = seeds |> Seq.chunkBySize 2 |> Seq.map(fun arr -> (arr[0], arr[1]))
-
-type Range = (int64 * int64)
-let calculateRange (range: Range): seq<int64> =
-    let (start, range) = range
-    let mutable locations = Seq.empty
-    for i in 0L..range do
-        let seed = start + i
-        let location = convertSeedToLocation seed
-        locations <- Seq.append locations [location]
-
-    locations
-        
-let two = ranges |> Seq.map calculateRange |> Seq.concat |> Seq.min
-printfn "Part B: %A" two
+let ranges = seeds |> Seq.chunkBySize 2 |> Seq.map(fun arr -> (arr[0], arr[0] + arr[1]))
